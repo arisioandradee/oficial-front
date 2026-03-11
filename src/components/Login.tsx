@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Target, 
   Zap, 
@@ -16,13 +16,23 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [isRegistering, setIsRegistering] = React.useState(false);
+  const [step, setStep] = React.useState(1);
   const [email, setEmail] = React.useState('arisio@dibaisales.com.br');
   const [password, setPassword] = React.useState('**********');
   const [name, setName] = React.useState('');
+  const [cargo, setCargo] = React.useState('');
+  const [colaboradores, setColaboradores] = React.useState('');
+  const [icp, setIcp] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isRegistering && step === 1) {
+      setStep(2);
+      return;
+    }
+
     setIsLoading(true);
     // Simulate login delay
     setTimeout(() => {
@@ -101,48 +111,144 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {isRegistering && (
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">NOME COMPLETO</label>
-                  <input 
-                    type="text" 
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                    placeholder="Seu nome"
-                  />
-                </div>
-              )}
-              
-              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">E-MAIL CORPORATIVO</label>
-                <input 
-                  type="email" 
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                  placeholder="seu@email.com"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">SENHA DE ACESSO</label>
-                  {!isRegistering && (
-                    <button type="button" className="text-[10px] font-black text-brand-primary uppercase tracking-wider hover:underline">Esqueceu sua senha?</button>
-                  )}
-                </div>
-                <input 
-                  type="password" 
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                  placeholder="••••••••"
-                />
-              </div>
+              <AnimatePresence mode="wait">
+                {isRegistering && step === 1 && (
+                  <motion.div 
+                    key="step1"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6"
+                  >
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">NOME COMPLETO</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="Seu nome"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">E-MAIL CORPORATIVO</label>
+                      <input 
+                        type="email" 
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="seu@email.com"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">SENHA DE ACESSO</label>
+                      <input 
+                        type="password" 
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+
+                {isRegistering && step === 2 && (
+                  <motion.div 
+                    key="step2"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6"
+                  >
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">QUAL SEU CARGO?</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={cargo}
+                        onChange={(e) => setCargo(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="Ex: Diretor de Vendas"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">NÚMERO DE COLABORADORES</label>
+                      <input 
+                        type="number" 
+                        required
+                        value={colaboradores}
+                        onChange={(e) => setColaboradores(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="Ex: 50"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">QUAL SEU ICP? (PERFIL DE CLIENTE IDEAL)</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={icp}
+                        onChange={(e) => setIcp(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="Ex: Empresas de tecnologia B2B"
+                      />
+                    </div>
+
+                    <button 
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      ← Voltar para dados básicos
+                    </button>
+                  </motion.div>
+                )}
+
+                {!isRegistering && (
+                  <motion.div 
+                    key="login"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="space-y-6"
+                  >
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">E-MAIL CORPORATIVO</label>
+                      <input 
+                        type="email" 
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="seu@email.com"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">SENHA DE ACESSO</label>
+                        <button type="button" className="text-[10px] font-black text-brand-primary uppercase tracking-wider hover:underline">Esqueceu sua senha?</button>
+                      </div>
+                      <input 
+                        type="password" 
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <button 
                 type="submit"
@@ -153,7 +259,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
-                    {isRegistering ? 'CRIAR MINHA CONTA' : 'ENTRAR NA PLATAFORMA'}
+                    {isRegistering 
+                      ? (step === 1 ? 'CONTINUAR' : 'CONCLUIR CADASTRO')
+                      : 'ENTRAR NA PLATAFORMA'}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}

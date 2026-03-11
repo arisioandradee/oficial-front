@@ -267,6 +267,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onStartSearch }) => {
       .catch(err => console.error(err));
   }, []);
 
+  React.useEffect(() => {
+    if (isNudgeVisible) {
+      const timer = setTimeout(() => setIsNudgeVisible(false), 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [isNudgeVisible]);
+
   const currentMetrics = React.useMemo(() => {
     if (selectedSector && sectorMetrics[selectedSector]) {
       return sectorMetrics[selectedSector];
@@ -341,6 +348,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ onStartSearch }) => {
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-96 h-96 bg-black/10 rounded-full blur-3xl" />
+
+            {/* Time progress bar */}
+            <motion.div 
+              initial={{ width: '100%' }}
+              animate={{ width: 0 }}
+              transition={{ duration: 10, ease: 'linear' }}
+              className="absolute bottom-0 left-0 h-1 bg-white/30 z-30"
+            />
           </motion.div>
         )}
       </AnimatePresence>

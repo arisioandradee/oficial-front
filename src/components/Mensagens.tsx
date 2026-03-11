@@ -8,7 +8,8 @@ import {
   ChevronLeft,
   Plus,
   MessageSquare,
-  Zap
+  Zap,
+  TrendingUp
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from '../lib/utils';
@@ -119,36 +120,63 @@ export const Mensagens: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Right Column: Templates & Config */}
+        {/* Right Column: Scripts & Config */}
         <div className="space-y-8">
           <div className="glass-card p-8">
             <div className="flex justify-between items-center mb-6">
-              <h4 className="text-[11px] font-black text-brand-text-dim uppercase tracking-widest">Templates</h4>
+              <h4 className="text-[11px] font-black text-brand-text-dim uppercase tracking-widest">Scripts</h4>
               <button className="p-2 rounded-lg bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20 transition-all">
                 <Plus className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-4">
               {[
-                { title: 'Primeiro Contato B2B', icon: MessageSquare },
-                { title: 'Follow-up Comercial', icon: FileText },
-                { title: 'Convite para Demonstração', icon: Zap },
-              ].map((temp, i) => (
+                { title: 'Script: Abordagem Direta', icon: MessageSquare },
+                { title: 'Script: Quebra de Gelo', icon: FileText },
+                { title: 'Script: Reativação Leads', icon: Zap },
+              ].map((script, i) => (
                 <button key={i} className="w-full flex items-center gap-4 p-4 rounded-xl border border-brand-border hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all text-left group">
                   <div className="w-10 h-10 rounded-lg bg-brand-bg border border-brand-border flex items-center justify-center group-hover:border-brand-primary/30 transition-all">
-                    <temp.icon className="w-5 h-5 text-brand-text-dim group-hover:text-brand-primary" />
+                    <script.icon className="w-5 h-5 text-brand-text-dim group-hover:text-brand-primary" />
                   </div>
-                  <span className="text-sm font-bold text-brand-text group-hover:text-brand-primary transition-colors">{temp.title}</span>
+                  <span className="text-sm font-bold text-brand-text group-hover:text-brand-primary transition-colors">{script.title}</span>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="glass-card p-8 bg-brand-primary/5 border-brand-primary/20">
-            <h4 className="text-[11px] font-black text-brand-primary uppercase tracking-widest mb-4">Dica de Conversão</h4>
-            <p className="text-xs font-medium text-brand-text-dim leading-relaxed">
-              Mensagens personalizadas com o nome da empresa e o setor aumentam a taxa de resposta em até <span className="text-brand-primary font-bold">45%</span>. Use nossas variáveis dinâmicas!
-            </p>
+            <div className="flex justify-between items-center mb-6">
+              <h4 className="text-[11px] font-black text-brand-primary uppercase tracking-widest flex items-center gap-2">
+                <TrendingUp className="w-4 h-4" />
+                Taxa de Resposta
+              </h4>
+              <span className="text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded text-[9px] font-black tracking-widest">+14%</span>
+            </div>
+            
+            <div className="h-24 flex items-end justify-between gap-2 mt-4 px-1">
+              {[40, 65, 45, 80, 55, 90, 75].map((h, i) => (
+                <div key={i} className="flex-1 bg-brand-primary/10 rounded-t-sm hover:bg-brand-primary/20 transition-colors relative group h-full">
+                  <div 
+                    className="absolute bottom-0 w-full bg-brand-primary rounded-t-sm transition-all duration-500 group-hover:bg-brand-accent cursor-pointer"
+                    style={{ height: `${h}%` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-brand-text text-brand-bg text-[10px] font-black px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                      {h}%
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-between text-[8px] font-black text-brand-text-dim uppercase tracking-widest mt-3 opacity-50">
+              <span>S</span>
+              <span>T</span>
+              <span>Q</span>
+              <span>Q</span>
+              <span>S</span>
+              <span>S</span>
+              <span>D</span>
+            </div>
           </div>
         </div>
       </div>

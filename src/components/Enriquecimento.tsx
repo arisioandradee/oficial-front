@@ -16,9 +16,9 @@ import {
   Download, 
   RefreshCcw,
   Edit2,
-  Search,
   Phone,
-  FileSpreadsheet
+  FileSpreadsheet,
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
@@ -61,9 +61,15 @@ const mockLeads: LeadEnriquecido[] = [
   }
 ];
 
+const mockHistory = [
+  { id: 'h1', name: 'Imobiliárias Curitiba', date: '11/03/2026', leads: 42, status: 'Concluído', type: 'excel' },
+  { id: 'h2', name: 'Restaurantes Jardins SP', date: '08/03/2026', leads: 128, status: 'Concluído', type: 'manual' },
+  { id: 'h3', name: 'Tech Startups BH', date: '05/03/2026', leads: 15, status: 'Processando', type: 'excel' },
+];
+
 export const Enriquecimento: React.FC = () => {
   const [view, setView] = React.useState<'form' | 'results'>('form');
-  const [activeTab, setActiveTab] = React.useState<'manual' | 'excel'>('manual');
+  const [activeTab, setActiveTab] = React.useState<'manual' | 'excel' | 'history'>('manual');
   const [listName, setListName] = React.useState('');
   const [cnpjs, setCnpjs] = React.useState('');
   const [excelFile, setExcelFile] = React.useState<File | null>(null);
@@ -282,11 +288,13 @@ export const Enriquecimento: React.FC = () => {
     >
       <header className="flex flex-col items-center text-center gap-4 mt-10">
         <div>
-          <h2 className="text-4xl font-black tracking-tighter text-brand-text uppercase leading-none mb-2">Novo Enriquecimento</h2>
+          <h2 className="text-4xl font-black tracking-tighter text-brand-text uppercase leading-none mb-2">
+            {activeTab === 'history' ? 'Histórico de Enriquecimento' : 'Novo Enriquecimento'}
+          </h2>
           <p className="text-brand-text-dim font-medium max-w-2xl mx-auto">
-            {activeTab === 'manual' 
-              ? 'Cole os CNPJs abaixo (um por linha, separados por vírgula ou ponto e vírgula). Cada CNPJ deve ter exatamente 14 dígitos.'
-              : 'Suba uma planilha Excel (.xlsx ou .csv) contendo uma coluna com os CNPJs que deseja enriquecer.'}
+            {activeTab === 'manual' && 'Cole os CNPJs abaixo (um por linha, separados por vírgula ou ponto e vírgula).'}
+            {activeTab === 'excel' && 'Suba uma planilha Excel (.xlsx ou .csv) contendo uma coluna com os CNPJs.'}
+            {activeTab === 'history' && 'Consulte e revisite todas as suas listas processadas anteriormente.'}
           </p>
         </div>
       </header>
@@ -303,7 +311,7 @@ export const Enriquecimento: React.FC = () => {
           )}
         >
           <FileText className="w-4 h-4" />
-          Lista Manual
+          Manual
         </button>
         <button
           onClick={() => setActiveTab('excel')}
@@ -315,98 +323,167 @@ export const Enriquecimento: React.FC = () => {
           )}
         >
           <FileSpreadsheet className="w-4 h-4" />
-          Planilha Excel
+          Planilha
+        </button>
+        <button
+          onClick={() => setActiveTab('history')}
+          className={cn(
+            "flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+            activeTab === 'history' 
+              ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" 
+              : "text-brand-text-dim hover:text-brand-text hover:bg-brand-hover"
+          )}
+        >
+          <Clock className="w-4 h-4" />
+          Histórico
         </button>
       </div>
 
-      <div className="glass-card p-8 space-y-8 max-w-4xl mx-auto">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-brand-text-dim uppercase tracking-[0.2em] ml-1">Nome da lista</label>
-            <input 
-              type="text" 
-              value={listName}
-              onChange={(e) => setListName(e.target.value)}
-              placeholder="Ex: Restaurantes SP, Tech Startups RJ..."
-              className="w-full px-6 py-4 bg-brand-bg border border-brand-border rounded-2xl text-sm font-bold text-brand-text outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all placeholder:text-brand-text-dim/50"
-            />
-          </div>
-
-          {activeTab === 'manual' ? (
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-brand-text-dim uppercase tracking-[0.2em] ml-1">CNPJs</label>
-              <textarea 
-                value={cnpjs}
-                onChange={(e) => setCnpjs(e.target.value)}
-                rows={6}
-                className="w-full px-6 py-4 bg-brand-bg border border-brand-border rounded-2xl text-sm font-bold text-brand-text outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all resize-none font-mono placeholder:text-brand-text-dim/50"
-                placeholder="33014556000196&#10;00000000000191&#10;11222333000181"
-              />
-              <div className="flex items-center gap-2 text-emerald-500 pt-2">
-                <CheckCircle2 className="w-4 h-4" />
-                <span className="text-xs font-black uppercase tracking-widest">Válidos: {validCnpjsCount}</span>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-brand-text-dim uppercase tracking-[0.2em] ml-1">Upload de Arquivo</label>
-              <div 
-                className={cn(
-                  "relative group cursor-pointer",
-                  excelFile ? "border-brand-primary bg-brand-primary/5" : "border-brand-border hover:border-brand-primary/50"
-                )}
-              >
-                <input 
-                  type="file" 
-                  accept=".xlsx, .xls, .csv"
-                  onChange={handleFileChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                />
-                <div className="border-2 border-dashed border-inherit rounded-2xl p-12 flex flex-col items-center justify-center gap-4 transition-all">
-                  <div className={cn(
-                    "p-4 rounded-full transition-all",
-                    excelFile ? "bg-brand-primary text-white" : "bg-brand-hover text-brand-text-dim group-hover:text-brand-primary"
-                  )}>
-                    <Upload className="w-8 h-8" />
+      <AnimatePresence mode="wait">
+        {activeTab === 'history' ? (
+          <motion.div 
+            key="history"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="max-w-4xl mx-auto space-y-4"
+          >
+            {mockHistory.map((item) => (
+              <div key={item.id} className="glass-card p-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-brand-primary/30 transition-all group">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/5 border border-brand-primary/10 flex items-center justify-center transition-transform group-hover:scale-110">
+                    {item.type === 'excel' ? <FileSpreadsheet className="w-6 h-6 text-brand-primary" /> : <FileText className="w-6 h-6 text-brand-primary" />}
                   </div>
-                  <div className="text-center">
-                    <p className="text-sm font-bold text-brand-text">
-                      {excelFile ? excelFile.name : 'Clique ou arraste sua planilha aqui'}
-                    </p>
-                    <p className="text-xs text-brand-text-dim mt-1">
-                      Suporta .xlsx, .xls e .csv (Máx 50MB)
-                    </p>
+                  <div>
+                    <h4 className="font-bold text-brand-text group-hover:text-brand-primary transition-colors">{item.name}</h4>
+                    <p className="text-[10px] font-black text-brand-text-dim uppercase tracking-widest leading-none mt-1">{item.date}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-12">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-[10px] font-black text-brand-text-dim uppercase tracking-widest mb-1">Total Leads</p>
+                    <p className="text-sm font-black text-brand-text">{item.leads}</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className={cn(
+                      "px-3 py-1 rounded text-[9px] font-black uppercase tracking-widest border",
+                      item.status === 'Concluído' ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-fuchsia-500/10 text-fuchsia-500 border-fuchsia-500/20 animate-pulse"
+                    )}>
+                      {item.status}
+                    </span>
+                    <button 
+                      onClick={() => {
+                        setListName(item.name);
+                        setView('results');
+                      }}
+                      className="p-3 bg-brand-bg border border-brand-border text-brand-text rounded-xl hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-95 shadow-lg group-hover:shadow-brand-primary/20"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </div>
-              {excelFile && (
-                <div className="flex items-center gap-2 text-emerald-500 pt-2">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span className="text-xs font-black uppercase tracking-widest">Arquivo pronto para processar</span>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div 
+            key="form"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            className="glass-card p-8 space-y-8 max-w-4xl mx-auto"
+          >
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-brand-text-dim uppercase tracking-[0.2em] ml-1">Nome da lista</label>
+                <input 
+                  type="text" 
+                  value={listName}
+                  onChange={(e) => setListName(e.target.value)}
+                  placeholder="Ex: Restaurantes SP, Tech Startups RJ..."
+                  className="w-full px-6 py-4 bg-brand-bg border border-brand-border rounded-2xl text-sm font-bold text-brand-text outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all placeholder:text-brand-text-dim/50"
+                />
+              </div>
+
+              {activeTab === 'manual' ? (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-brand-text-dim uppercase tracking-[0.2em] ml-1">CNPJs</label>
+                  <textarea 
+                    value={cnpjs}
+                    onChange={(e) => setCnpjs(e.target.value)}
+                    rows={6}
+                    className="w-full px-6 py-4 bg-brand-bg border border-brand-border rounded-2xl text-sm font-bold text-brand-text outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all resize-none font-mono placeholder:text-brand-text-dim/50"
+                    placeholder="33014556000196&#10;00000000000191&#10;11222333000181"
+                  />
+                  <div className="flex items-center gap-2 text-emerald-500 pt-2">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span className="text-xs font-black uppercase tracking-widest">Válidos: {validCnpjsCount}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-brand-text-dim uppercase tracking-[0.2em] ml-1">Upload de Arquivo</label>
+                  <div 
+                    className={cn(
+                      "relative group cursor-pointer",
+                      excelFile ? "border-brand-primary bg-brand-primary/5" : "border-brand-border hover:border-brand-primary/50"
+                    )}
+                  >
+                    <input 
+                      type="file" 
+                      accept=".xlsx, .xls, .csv"
+                      onChange={handleFileChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    />
+                    <div className="border-2 border-dashed border-inherit rounded-2xl p-12 flex flex-col items-center justify-center gap-4 transition-all">
+                      <div className={cn(
+                        "p-4 rounded-full transition-all",
+                        excelFile ? "bg-brand-primary text-white" : "bg-brand-hover text-brand-text-dim group-hover:text-brand-primary"
+                      )}>
+                        <Upload className="w-8 h-8" />
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm font-bold text-brand-text">
+                          {excelFile ? excelFile.name : 'Clique ou arraste sua planilha aqui'}
+                        </p>
+                        <p className="text-xs text-brand-text-dim mt-1">
+                          Suporta .xlsx, .xls e .csv (Máx 50MB)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {excelFile && (
+                    <div className="flex items-center gap-2 text-emerald-500 pt-2">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span className="text-xs font-black uppercase tracking-widest">Arquivo pronto para processar</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          )}
-        </div>
 
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={handleStart}
-            className="flex-1 bg-brand-primary text-white py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-brand-accent transition-all shadow-xl shadow-brand-primary/20 flex items-center justify-center gap-3 group mt-4"
-          >
-            <Play className="w-4 h-4 fill-current" />
-            Iniciar Enriquecimento {activeTab === 'manual' 
-              ? (validCnpjsCount > 0 ? `(${validCnpjsCount} CNPJs)` : '(Exemplo)')
-              : (excelFile ? '(Planilha Selecionada)' : '(Exemplo)')}
-          </button>
-          <button 
-            onClick={handleClear}
-            className="px-8 py-5 bg-brand-hover border border-brand-border text-brand-text rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-brand-border transition-all mt-4"
-          >
-            Limpar
-          </button>
-        </div>
-      </div>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={handleStart}
+                className="flex-1 bg-brand-primary text-white py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-brand-accent transition-all shadow-xl shadow-brand-primary/20 flex items-center justify-center gap-3 group mt-4"
+              >
+                <Play className="w-4 h-4 fill-current" />
+                Iniciar Enriquecimento {activeTab === 'manual' 
+                  ? (validCnpjsCount > 0 ? `(${validCnpjsCount} CNPJs)` : '(Exemplo)')
+                  : (excelFile ? '(Planilha Selecionada)' : '(Exemplo)')}
+              </button>
+              <button 
+                onClick={handleClear}
+                className="px-8 py-5 bg-brand-hover border border-brand-border text-brand-text rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-brand-border transition-all mt-4"
+              >
+                Limpar
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
