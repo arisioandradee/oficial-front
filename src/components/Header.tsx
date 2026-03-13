@@ -123,15 +123,6 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, theme, 
               "flex items-center gap-1 p-1 bg-brand-card/50 border border-brand-border rounded-full shadow-sm transition-all duration-200",
               (isProfileOpen || isNotificationsOpen || isUpdatesOpen) && "border-brand-primary bg-brand-card shadow-lg"
             )}>
-              {/* Theme Toggle Button (Always visible for accessibility) */}
-              <button 
-                onClick={toggleTheme}
-                className="p-2 rounded-full text-brand-text-dim hover:text-brand-text hover:bg-brand-hover transition-all duration-200"
-                title="Alternar tema"
-              >
-                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-              </button>
-
               {!hideNav && (
                 <>
                   {/* Update Notes Dropdown */}
