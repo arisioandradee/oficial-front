@@ -17,7 +17,14 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState('dashboard');
   const [theme, setTheme] = React.useState('dark');
-  const [isFirstLogin, setIsFirstLogin] = React.useState(false);
+  const [credits, setCredits] = React.useState(() => {
+    const saved = localStorage.getItem('dibai_credits');
+    return saved !== null ? parseInt(saved) : 10;
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('dibai_credits', credits.toString());
+  }, [credits]);
 
   React.useEffect(() => {
     if (theme === 'dark') {
@@ -36,7 +43,7 @@ export default function App() {
       case 'dashboard':
         return <Dashboard onStartSearch={() => setActiveTab('busca')} />;
       case 'busca':
-        return <Busca />;
+        return <Busca credits={credits} setCredits={setCredits} onNavigateToPlans={() => setActiveTab('planos')} />;
       case 'enriquecimento':
         return <Enriquecimento />;
       case 'gestao':
@@ -50,8 +57,9 @@ export default function App() {
           <Planos 
             onBack={() => {
               setActiveTab('dashboard');
-              setIsFirstLogin(false);
             }} 
+            userCredits={credits}
+            setUserCredits={setCredits}
           />
         );
       case 'account':
@@ -77,7 +85,6 @@ export default function App() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    setIsFirstLogin(true);
     setActiveTab('dashboard');
   };
 
@@ -93,7 +100,7 @@ export default function App() {
         theme={theme as 'light' | 'dark'}
         toggleTheme={toggleTheme}
         onLogout={() => setIsLoggedIn(false)}
-        hideNav={isFirstLogin && activeTab === 'planos'}
+        credits={credits}
       />
       
       <main className="flex-1 overflow-y-auto transition-all duration-300">

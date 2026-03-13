@@ -28,13 +28,14 @@ interface HeaderProps {
   theme: 'light' | 'dark';
   toggleTheme: () => void;
   onLogout: () => void;
-  hideNav?: boolean;
+  credits?: number;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, theme, toggleTheme, onLogout, hideNav = false }) => {
+export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, theme, toggleTheme, onLogout, credits = 0 }) => {
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = React.useState(false);
   const [isUpdatesOpen, setIsUpdatesOpen] = React.useState(false);
+  const [isCreditsHovered, setIsCreditsHovered] = React.useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const notificationsRef = React.useRef<HTMLDivElement>(null);
@@ -97,25 +98,23 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, theme, 
           </div>
 
           {/* Navigation Tabs */}
-          {!hideNav && (
-            <nav className="flex items-center bg-brand-hover/40 p-1 rounded-full border border-brand-border/50">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={cn(
-                    "flex items-center gap-2 px-5 py-2 rounded-full transition-all duration-200 text-[11px] font-bold tracking-wider uppercase",
-                    activeTab === item.id 
-                      ? "bg-brand-card text-brand-primary shadow-sm border border-brand-border" 
-                      : "text-brand-text-dim hover:text-brand-text hover:bg-brand-hover/50"
-                  )}
-                >
-                  <item.icon className={cn("w-3.5 h-3.5", activeTab === item.id ? "text-brand-primary" : "text-brand-text-dim")} />
-                  <span className="hidden lg:inline">{item.label}</span>
-                </button>
-              ))}
-            </nav>
-          )}
+          <nav className="flex items-center bg-brand-hover/40 p-1 rounded-full border border-brand-border/50">
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={cn(
+                  "flex items-center gap-2 px-5 py-2 rounded-full transition-all duration-200 text-[11px] font-bold tracking-wider uppercase",
+                  activeTab === item.id 
+                    ? "bg-brand-card text-brand-primary shadow-sm border border-brand-border" 
+                    : "text-brand-text-dim hover:text-brand-text hover:bg-brand-hover/50"
+                )}
+              >
+                <item.icon className={cn("w-3.5 h-3.5", activeTab === item.id ? "text-brand-primary" : "text-brand-text-dim")} />
+                <span className="hidden lg:inline">{item.label}</span>
+              </button>
+            ))}
+          </nav>
 
           {/* Unified Action & Profile Capsule */}
           <div className="flex items-center gap-4">
@@ -123,8 +122,31 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, theme, 
               "flex items-center gap-1 p-1 bg-brand-card/50 border border-brand-border rounded-full shadow-sm transition-all duration-200",
               (isProfileOpen || isNotificationsOpen || isUpdatesOpen) && "border-brand-primary bg-brand-card shadow-lg"
             )}>
-              {!hideNav && (
-                <>
+              {/* Credits Badge */}
+              <div 
+                className="relative"
+                onMouseEnter={() => setIsCreditsHovered(true)}
+                onMouseLeave={() => setIsCreditsHovered(false)}
+              >
+                    <div className="px-3 py-1.5 flex items-center gap-2 bg-brand-primary/10 border border-brand-primary/20 rounded-full mr-1 group hover:bg-brand-primary/20 transition-all cursor-default">
+                      <Zap className="w-3 h-3 text-brand-primary fill-brand-primary animate-pulse" />
+                      <span className="text-[10px] font-black text-brand-primary uppercase tracking-widest">{credits} <span className="hidden xs:inline">CRÉDITOS</span></span>
+                    </div>
+
+                    <AnimatePresence>
+                      {isCreditsHovered && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                          className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 bg-brand-card border border-brand-border rounded-lg shadow-xl z-50 whitespace-nowrap pointer-events-none"
+                        >
+                          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-brand-card border-l border-t border-brand-border rotate-45" />
+                          <p className="text-[9px] font-black text-brand-text uppercase tracking-widest">Saldo total de créditos</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                   {/* Update Notes Dropdown */}
                   <div className="relative" ref={updatesRef}>
                     <button 
@@ -356,12 +378,10 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, theme, 
                       )}
                     </AnimatePresence>
                   </div>
-                </>
-              )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </header>
+          </header>
 
       {/* Logout Confirmation Modal */}
       <AnimatePresence>

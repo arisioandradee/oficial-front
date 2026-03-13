@@ -20,9 +20,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = React.useState('arisio@dibaisales.com.br');
   const [password, setPassword] = React.useState('**********');
   const [name, setName] = React.useState('');
-  const [cargo, setCargo] = React.useState('');
-  const [colaboradores, setColaboradores] = React.useState('');
-  const [icp, setIcp] = React.useState('');
+  const [cpfCnpj, setCpfCnpj] = React.useState('');
+  const [phone, setPhone] = React.useState('');
   const [isForgotPassword, setIsForgotPassword] = React.useState(false);
   const [forgotPasswordStep, setForgotPasswordStep] = React.useState(1);
   const [recoveryEmail, setRecoveryEmail] = React.useState('');
@@ -55,8 +54,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       }
     }
 
-    if (isRegistering && step === 1) {
-      setStep(2);
+    if (isRegistering && !isTermsAccepted) {
+      alert('Você precisa aceitar os termos de uso.');
       return;
     }
 
@@ -90,22 +89,22 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         {/* Branding Side */}
         <motion.div 
           layout
-          className="md:w-5/12 bg-brand-primary p-10 md:p-16 flex flex-col items-center justify-center relative overflow-hidden"
+          className="md:w-5/12 bg-brand-primary p-8 md:p-12 flex flex-col items-center justify-center relative overflow-hidden"
         >
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full -mr-32 -mt-32" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 blur-[80px] rounded-full -ml-32 -mb-32" />
           
           <motion.div layout className="relative z-10 flex flex-col items-center text-center">
-            <img src="/logoDibai.png" alt="Dibai Sales Logo" className="w-64 md:w-72 mb-8 drop-shadow-2xl" />
+            <img src="/logoDibai.png" alt="Dibai Sales Logo" className="w-56 md:w-64 mb-6 drop-shadow-2xl" />
           </motion.div>
         </motion.div>
 
         {/* Right Side - Forms */}
-        <motion.div layout className="md:w-7/12 p-10 md:p-16 flex flex-col justify-center bg-[#0f131c]">
+        <motion.div layout className="md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-[#0f131c]">
           <div className="max-w-sm mx-auto w-full">
-            <div className="mb-10">
-              <h3 className="text-3xl font-black text-white tracking-tight mb-2">
+            <div className="mb-6">
+              <h3 className="text-2xl font-black text-white tracking-tight mb-1">
                 {isForgotPassword 
                   ? (forgotPasswordStep === 1 ? 'Recuperar senha' : 'Verificar código')
                   : isRegistering ? 'Cadastre-se' : 'Acessar plataforma'}
@@ -122,10 +121,10 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             {!isForgotPassword && (
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 mb-6">
                 <button 
                   type="button"
-                  className="w-full bg-white/5 border border-white/10 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center justify-center gap-3 group"
+                  className="w-full bg-white/5 border border-white/10 text-white py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center justify-center gap-3 group"
                 >
                   <svg className="w-4 h-4" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -140,12 +139,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-white/10"></div>
                   </div>
-                  <span className="relative px-4 bg-[#0f131c] text-[10px] font-black text-slate-500 uppercase tracking-widest">OU</span>
+                  <span className="relative px-4 bg-[#0f131c] text-[9px] font-black text-slate-500 uppercase tracking-widest">OU</span>
                 </div>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <AnimatePresence mode="wait">
                 {isForgotPassword && forgotPasswordStep === 1 && (
                   <motion.div 
@@ -218,97 +217,63 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   </motion.div>
                 )}
 
-                {isRegistering && step === 1 && !isForgotPassword && (
+                {isRegistering && !isForgotPassword && (
                   <motion.div 
-                    key="step1"
+                    key="registration"
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="space-y-3"
                   >
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">NOME COMPLETO</label>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">NOME COMPLETO</label>
                       <input 
                         type="text" 
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        className="w-full px-5 py-3 bg-[#05070a] border border-white/10 rounded-xl text-xs font-bold text-white outline-none focus:border-brand-primary transition-all"
                         placeholder="Seu nome"
                       />
                     </div>
                     
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">E-MAIL CORPORATIVO</label>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">E-MAIL</label>
                       <input 
                         type="email" 
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
+                        className="w-full px-5 py-3 bg-[#05070a] border border-white/10 rounded-xl text-xs font-bold text-white outline-none focus:border-brand-primary transition-all"
                         placeholder="seu@email.com"
                       />
                     </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">SENHA DE ACESSO</label>
-                      <input 
-                        type="password" 
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                        placeholder="••••••••"
-                      />
-                    </div>
-                  </motion.div>
-                )}
 
-                {isRegistering && step === 2 && !isForgotPassword && (
-                  <motion.div 
-                    key="step2"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
-                  >
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">QUAL SEU CARGO?</label>
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">CPF OU CNPJ</label>
                       <input 
                         type="text" 
                         required
-                        value={cargo}
-                        onChange={(e) => setCargo(e.target.value)}
-                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                        placeholder="Ex: Diretor de Vendas"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">NÚMERO DE COLABORADORES</label>
-                      <input 
-                        type="number" 
-                        required
-                        value={colaboradores}
-                        onChange={(e) => setColaboradores(e.target.value)}
-                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                        placeholder="Ex: 50"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">QUAL SEU ICP? (PERFIL DE CLIENTE IDEAL)</label>
-                      <input 
-                        type="text" 
-                        required
-                        value={icp}
-                        onChange={(e) => setIcp(e.target.value)}
-                        className="w-full px-6 py-4 bg-[#05070a] border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all"
-                        placeholder="Ex: Empresas de tecnologia B2B"
+                        value={cpfCnpj}
+                        onChange={(e) => setCpfCnpj(e.target.value)}
+                        className="w-full px-5 py-3 bg-[#05070a] border border-white/10 rounded-xl text-xs font-bold text-white outline-none focus:border-brand-primary transition-all"
+                        placeholder="000.000.000-00"
                       />
                     </div>
 
-                    <div className="flex items-start gap-3 pt-2">
+                    <div className="space-y-1">
+                      <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">TELEFONE</label>
+                      <input 
+                        type="tel" 
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full px-5 py-3 bg-[#05070a] border border-white/10 rounded-xl text-xs font-bold text-white outline-none focus:border-brand-primary transition-all"
+                        placeholder="(00) 00000-0000"
+                      />
+                    </div>
+
+                    <div className="flex items-start gap-3 pt-1">
                       <div className="flex items-center h-5">
                         <input
                           id="terms"
@@ -333,14 +298,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                         </label>
                       </div>
                     </div>
-
-                    <button 
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"
-                    >
-                      ← Voltar para dados básicos
-                    </button>
                   </motion.div>
                 )}
 
@@ -393,8 +350,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
               <button 
                 type="submit"
-                disabled={isLoading || (isRegistering && step === 2 && !isTermsAccepted)}
-                className="w-full bg-brand-primary text-white py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-brand-accent transition-all shadow-xl shadow-brand-primary/20 flex items-center justify-center gap-3 group disabled:opacity-50 mt-4"
+                disabled={isLoading || (isRegistering && !isTermsAccepted)}
+                className="w-full bg-brand-primary text-white py-4 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-brand-accent transition-all shadow-xl shadow-brand-primary/20 flex items-center justify-center gap-3 group disabled:opacity-50 mt-2"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -403,7 +360,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     {isForgotPassword 
                       ? (forgotPasswordStep === 1 ? 'ENVIAR CÓDIGO' : 'VERIFICAR')
                       : isRegistering 
-                        ? (step === 1 ? 'CONTINUAR' : 'CONCLUIR CADASTRO')
+                        ? 'CONCLUIR CADASTRO'
                         : 'ENTRAR NA PLATAFORMA'}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
@@ -412,8 +369,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </form>
 
             {!isForgotPassword && (
-              <div className="mt-10 pt-8 border-t border-white/10 text-center">
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">
+              <div className="mt-8 pt-6 border-t border-white/10 text-center">
+                <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
                   {isRegistering ? 'Já possui uma conta?' : 'Não possui uma conta?'} {' '}
                   <button 
                     onClick={() => setIsRegistering(!isRegistering)}

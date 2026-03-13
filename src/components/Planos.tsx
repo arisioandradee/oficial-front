@@ -61,7 +61,11 @@ const PricingCard = ({
   );
 };
 
-export const Planos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export const Planos: React.FC<{ 
+  onBack: () => void;
+  userCredits?: number;
+  setUserCredits?: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ onBack, userCredits = 0, setUserCredits }) => {
   const [step, setStep] = useState<CheckoutStep>('selection');
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [credits, setCredits] = useState(150);
@@ -153,6 +157,9 @@ export const Planos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
+      if (setUserCredits) {
+        setUserCredits(prev => prev + credits);
+      }
       setStep('success');
     }, 2500);
   };

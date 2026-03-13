@@ -319,7 +319,11 @@ const LeadCard = ({ company, onClick, isSelected, onToggleSelect }: any) => (
   </motion.div>
 );
 
-export const Busca: React.FC = () => {
+export const Busca: React.FC<{ 
+  credits: number; 
+  setCredits: React.Dispatch<React.SetStateAction<number>>;
+  onNavigateToPlans: () => void;
+}> = ({ credits, setCredits, onNavigateToPlans }) => {
   const [showResults, setShowResults] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [selectedLead, setSelectedLead] = React.useState<any>(null);
@@ -610,8 +614,14 @@ export const Busca: React.FC = () => {
         }
       }
 
+      if (credits <= 0) {
+        onNavigateToPlans();
+        return;
+      }
+
       const results = await searchLeadsWithAI(query);
       setLeads(results);
+      setCredits(prev => Math.max(0, prev - 1));
       setShowResults(true);
     } catch (error) {
       console.error("Erro na busca IA:", error);
