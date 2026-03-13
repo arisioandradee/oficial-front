@@ -22,6 +22,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [name, setName] = React.useState('');
   const [cpfCnpj, setCpfCnpj] = React.useState('');
   const [phone, setPhone] = React.useState('');
+  const [registerPassword, setRegisterPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
   const [isForgotPassword, setIsForgotPassword] = React.useState(false);
   const [forgotPasswordStep, setForgotPasswordStep] = React.useState(1);
   const [recoveryEmail, setRecoveryEmail] = React.useState('');
@@ -272,7 +274,31 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                         placeholder="(00) 00000-0000"
                       />
                     </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">SENHA</label>
+                        <input 
+                          type="password" 
+                          required
+                          value={registerPassword}
+                          onChange={(e) => setRegisterPassword(e.target.value)}
+                          className="w-full px-5 py-3 bg-[#05070a] border border-white/10 rounded-xl text-xs font-bold text-white outline-none focus:border-brand-primary transition-all"
+                          placeholder="••••••••"
+                        />
+                      </div>
 
+                      <div className="space-y-1">
+                        <label className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">CONFIRMAR</label>
+                        <input 
+                          type="password" 
+                          required
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="w-full px-5 py-3 bg-[#05070a] border border-white/10 rounded-xl text-xs font-bold text-white outline-none focus:border-brand-primary transition-all"
+                          placeholder="••••••••"
+                        />
+                      </div>
+                    </div>
                     <div className="flex items-start gap-3 pt-1">
                       <div className="flex items-center h-5">
                         <input
