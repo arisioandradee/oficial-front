@@ -178,11 +178,10 @@ export const Historico: React.FC = () => {
                   <th className="py-4 px-4 whitespace-nowrap">Nome</th>
                   <th className="py-4 px-4 whitespace-nowrap">Filtros</th>
                   <th className="py-4 px-4 text-right whitespace-nowrap">Resultados</th>
-                  <th className="py-4 px-4 text-right whitespace-nowrap">Novos</th>
-                  <th className="py-4 px-4 text-right whitespace-nowrap">Cache</th>
                   <th className="py-4 px-4 text-center whitespace-nowrap">Listas</th>
                   <th className="py-4 px-4 whitespace-nowrap">Usuario</th>
                   <th className="py-4 px-4 whitespace-nowrap">Organizacao</th>
+                  <th className="py-4 px-4 text-center whitespace-nowrap">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -258,12 +257,6 @@ export const Historico: React.FC = () => {
                     <td className="py-4 px-4 text-right text-xs font-bold text-brand-text font-mono">
                       {item.leads > 0 ? item.leads.toLocaleString('pt-BR') : '--'}
                     </td>
-                    <td className="py-4 px-4 text-right text-xs font-bold text-emerald-500 font-mono">
-                      {item.newLeads > 0 ? item.newLeads : '--'}
-                    </td>
-                    <td className="py-4 px-4 text-right text-xs font-bold text-brand-primary font-mono">
-                      {item.cache > 0 ? item.cache : '--'}
-                    </td>
                     <td className="py-4 px-4 text-center">
                       <div className="flex items-center justify-center">
                         <div className={cn(
@@ -281,6 +274,31 @@ export const Historico: React.FC = () => {
                     </td>
                     <td className="py-4 px-4 text-xs font-bold text-brand-text-dim whitespace-nowrap uppercase tracking-tighter">
                       {item.org}
+                    </td>
+                    <td className="py-4 px-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Logic for download excel
+                            console.log('Download', item.id);
+                          }}
+                          className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500/20 transition-all shadow-sm"
+                          title="Baixar Planilha"
+                        >
+                          <Download className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(item.id);
+                          }}
+                          className="p-2 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-all shadow-sm"
+                          title="Deletar Histórico"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -356,26 +374,6 @@ export const Historico: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Lead Summary Cards */}
-                <div className="space-y-3">
-                  <h4 className="text-[10px] font-black text-brand-text-dim uppercase tracking-widest ml-1">Leads Encontrados</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="glass-card p-4 flex flex-col items-center justify-center text-center space-y-1">
-                      <div className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest">
-                        <Plus className="w-3 h-3" />
-                        Novos
-                      </div>
-                      <p className="text-2xl font-black text-brand-text">{selectedSearch.newLeads || 0}</p>
-                    </div>
-                    <div className="glass-card p-4 flex flex-col items-center justify-center text-center space-y-1">
-                      <div className="flex items-center gap-2 text-[10px] font-black text-brand-primary uppercase tracking-widest">
-                        <Database className="w-3 h-3" />
-                        Já existentes
-                      </div>
-                      <p className="text-2xl font-black text-brand-text">{selectedSearch.cache || 0}</p>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Generated Lists */}
                 <div className="space-y-3">

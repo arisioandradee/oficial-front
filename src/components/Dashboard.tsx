@@ -370,7 +370,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onStartSearch }) => {
 
       <header className="flex justify-between items-end mt-10">
         <div>
-          <h2 className="text-4xl font-bold tracking-tight mb-2 text-brand-text">Dashboard de Inteligência</h2>
+          <h2 className="text-2xl font-black tracking-tighter text-brand-text uppercase leading-none mb-1.5">Dashboard de Inteligência</h2>
           <p className="text-brand-text-dim font-medium">Monitoramento de prospecção e inteligência de dados em tempo real.</p>
         </div>
       </header>

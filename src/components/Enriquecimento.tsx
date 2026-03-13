@@ -289,58 +289,59 @@ export const Enriquecimento: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       className="max-w-7xl mx-auto px-6 md:px-12 space-y-8 pb-12 pt-24"
     >
-      <header className="flex flex-col items-center text-center gap-4 mt-10">
-        <div>
-          <h2 className="text-4xl font-black tracking-tighter text-brand-text uppercase leading-none mb-2">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mt-6">
+        <div className="text-left">
+          <h2 className="text-2xl font-black tracking-tighter text-brand-text uppercase leading-none mb-1.5">
             {activeTab === 'history' ? 'Histórico de Enriquecimento' : 'Novo Enriquecimento'}
           </h2>
-          <p className="text-brand-text-dim font-medium max-w-2xl mx-auto">
+          <p className="text-sm font-medium text-brand-text-dim">
             {activeTab === 'manual' && 'Cole os CNPJs abaixo (um por linha, separados por vírgula ou ponto e vírgula).'}
             {activeTab === 'excel' && 'Suba uma planilha Excel (.xlsx ou .csv) contendo uma coluna com os CNPJs.'}
             {activeTab === 'history' && 'Consulte e revisite todas as suas listas processadas anteriormente.'}
           </p>
         </div>
+
+        {/* Tabs moved to header */}
+        <div className="flex items-center gap-1 p-1 bg-brand-bg border border-brand-border/50 rounded-2xl w-fit">
+          <button
+            onClick={() => setActiveTab('manual')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+              activeTab === 'manual' 
+                ? "bg-brand-card text-brand-primary shadow-sm border border-brand-border" 
+                : "text-brand-text-dim hover:text-brand-text"
+            )}
+          >
+            <FileText className="w-4 h-4" />
+            Manual
+          </button>
+          <button
+            onClick={() => setActiveTab('excel')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+              activeTab === 'excel' 
+                ? "bg-brand-card text-brand-primary shadow-sm border border-brand-border" 
+                : "text-brand-text-dim hover:text-brand-text"
+            )}
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            Planilha
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+              activeTab === 'history' 
+                ? "bg-brand-card text-brand-primary shadow-sm border border-brand-border" 
+                : "text-brand-text-dim hover:text-brand-text"
+            )}
+          >
+            <Clock className="w-4 h-4" />
+            Histórico
+          </button>
+        </div>
       </header>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 p-1 bg-brand-bg border border-brand-border rounded-2xl w-fit mx-auto">
-        <button
-          onClick={() => setActiveTab('manual')}
-          className={cn(
-            "flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-            activeTab === 'manual' 
-              ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" 
-              : "text-brand-text-dim hover:text-brand-text hover:bg-brand-hover"
-          )}
-        >
-          <FileText className="w-4 h-4" />
-          Manual
-        </button>
-        <button
-          onClick={() => setActiveTab('excel')}
-          className={cn(
-            "flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-            activeTab === 'excel' 
-              ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" 
-              : "text-brand-text-dim hover:text-brand-text hover:bg-brand-hover"
-          )}
-        >
-          <FileSpreadsheet className="w-4 h-4" />
-          Planilha
-        </button>
-        <button
-          onClick={() => setActiveTab('history')}
-          className={cn(
-            "flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-            activeTab === 'history' 
-              ? "bg-brand-primary text-white shadow-lg shadow-brand-primary/20" 
-              : "text-brand-text-dim hover:text-brand-text hover:bg-brand-hover"
-          )}
-        >
-          <Clock className="w-4 h-4" />
-          Histórico
-        </button>
-      </div>
 
       <AnimatePresence mode="wait">
         {activeTab === 'history' ? (

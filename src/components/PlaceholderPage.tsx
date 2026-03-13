@@ -19,7 +19,7 @@ export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ title, icon: I
         <div className="w-24 h-24 rounded-3xl bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center mx-auto mb-8">
           <Icon className="w-10 h-10 text-brand-primary" />
         </div>
-        <h2 className="text-4xl font-black italic tracking-tighter mb-4">{title}</h2>
+        <h2 className="text-2xl font-black italic tracking-tighter mb-4">{title}</h2>
         <p className="text-brand-text-dim font-medium mb-12">
           Em breve você poderá {title === 'Nossos Planos' ? 'gerenciar sua assinatura e upgrade' : 'importar seus contatos'} diretamente por aqui.
           <br />

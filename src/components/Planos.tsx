@@ -186,7 +186,7 @@ export const Planos: React.FC<{
           <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-8">
             <Check className="w-10 h-10 text-emerald-500" />
           </div>
-          <h2 className="text-4xl font-black text-brand-text uppercase tracking-tighter mb-4">Pedido Realizado!</h2>
+          <h2 className="text-2xl font-black text-brand-text uppercase tracking-tighter mb-4">Pedido Realizado!</h2>
           <p className="text-brand-text-dim font-medium mb-10">
             {paymentMethod === 'card' 
               ? `Seus ${credits} créditos já estão disponíveis.` 
@@ -226,7 +226,7 @@ export const Planos: React.FC<{
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div className="space-y-10">
             <div>
-              <h2 className="text-4xl font-black tracking-tighter text-brand-text uppercase leading-none mb-4">Finalizar Recarga</h2>
+              <h2 className="text-2xl font-black tracking-tighter text-brand-text uppercase leading-none mb-4">Finalizar Recarga</h2>
               <p className="text-brand-text-dim font-medium">Configure seu volume e escolha a forma de pagamento.</p>
             </div>
 

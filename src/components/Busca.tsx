@@ -332,7 +332,7 @@ export const Busca: React.FC<{
   const [selectedLeads, setSelectedLeads] = React.useState<Set<string>>(new Set());
   
   // Filter States
-  const [openFilters, setOpenFilters] = React.useState<string[]>(['opcoes']);
+  const [openFilters, setOpenFilters] = React.useState<string[]>([]);
   const [resultsCount, setResultsCount] = React.useState('100');
   const [razaoSocial, setRazaoSocial] = React.useState('');
   const [isSaveModalOpen, setIsSaveModalOpen] = React.useState(false);
@@ -1658,12 +1658,65 @@ export const Busca: React.FC<{
               {/* Call to Action with Arrow pointing to the LEFT */}
               <div className="relative mb-16 text-center">
                 {/* Removed Filtre aqui! annotation */}
-                <h2 className="text-2xl font-black text-brand-text mb-4 tracking-tighter uppercase leading-none">
+                <h2 className="text-4xl font-black text-brand-text mb-4 tracking-tighter uppercase leading-[0.9] relative inline-block">
                   Comece sua busca de empresas <br />
                   <span className="text-brand-primary">utilizando os filtros ao lado!</span>
+                  
+                  {/* Curved Guiding Arrow */}
+                  <div className="absolute -left-[420px] top-4 hidden xl:block w-[420px] h-32 pointer-events-none">
+                    <motion.svg 
+                      width="400" 
+                      height="120" 
+                      viewBox="0 0 400 120" 
+                      fill="none"
+                    >
+                      <motion.path
+                        d="M380 10 C 300 10, 50 20, 25 95"
+                        stroke="url(#arrowGradient)"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        fill="none"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ 
+                          pathLength: [0, 1, 1],
+                          opacity: [0, 1, 0]
+                        }}
+                        transition={{ 
+                          duration: 3,
+                          times: [0, 0.6, 1],
+                          ease: "easeInOut",
+                          repeat: Infinity,
+                        }}
+                      />
+                      <motion.path
+                        d="M12 85 L 25 95 L 38 85"
+                        stroke="#3b82f6"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        fill="none"
+                        initial={{ opacity: 0 }}
+                        animate={{ 
+                          opacity: [0, 0, 1, 0]
+                        }}
+                        transition={{ 
+                          duration: 3,
+                          times: [0, 0.5, 0.6, 1],
+                          ease: "easeInOut",
+                          repeat: Infinity,
+                        }}
+                      />
+                      <defs>
+                        <linearGradient id="arrowGradient" x1="380" y1="10" x2="25" y2="95" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0" />
+                          <stop offset="100%" stopColor="#3b82f6" stopOpacity="1" />
+                        </linearGradient>
+                      </defs>
+                    </motion.svg>
+                  </div>
                 </h2>
                 <p className="text-brand-text-dim text-sm font-medium max-w-2xl mx-auto">
-                  Filtre por critérios técnicos, use a IA para descrever nichos específicos ou combine ambos para chegar ao lead perfeito.
+                  Não sabe por onde começar? Use nossa Inteligência Artificial para descrever o que precisa ou explore os filtros manuais.
                 </p>
               </div>
 
@@ -1683,9 +1736,9 @@ export const Busca: React.FC<{
                 <button 
                   onClick={handleGenerate}
                   disabled={isLoading}
-                  className="bg-brand-primary hover:bg-brand-accent text-white px-6 py-3 rounded-xl font-black tracking-widest uppercase text-[10px] flex items-center gap-2 transition-all shadow-lg shadow-brand-primary/20 disabled:opacity-50"
+                  className="bg-brand-primary hover:bg-brand-accent text-white px-8 py-3 rounded-xl font-black tracking-widest uppercase text-[10px] flex items-center gap-2 transition-all shadow-lg shadow-brand-primary/20 disabled:opacity-50"
                 >
-                  {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   Buscar
                 </button>
               </div>
